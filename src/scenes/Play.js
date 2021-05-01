@@ -1,0 +1,215 @@
+class Play extends Phaser.Scene{
+    constructor() {
+        super("playScene");
+    }
+
+    preload() {
+        this.load.image('bg','assets/bg.png');
+        this.load.image('player','assets/player.png');
+        this.load.image('shit','assets/shit.png');
+        this.load.image('coin','assets/coin.png');
+        this.load.image('sword','assets/sword.png');
+        this.load.image('shield','assets/shield.png');
+    }
+
+    create() {
+        //define constants of physics
+        this.playerVelocity = 300;
+        this.enemyVelocity = 350;
+        this.rewardVelocity1 = 400;
+        this.rewardVelocity2 = 400;
+
+        //Place background
+        this.bg = this.add.tileSprite(0,0,640,480,'bg').setOrigin(0,0);
+        
+        //add player
+        this.p1 = this.physics.add.sprite(0,centerY,'player').setScale(0.5);
+        this.p1.setCollideWorldBounds(true);
+
+        //add shit
+        this.shit1 = this.physics.add.sprite(centerX,game.config.height- quarterY/4,'shit').setScale(0.5);
+        this.shit1.body.setSize(32,32);
+
+        //add coin
+        this.coin1 = this.physics.add.sprite(centerX,centerY,'coin');
+
+        //add sword
+        this.sword1 = this.physics.add.sprite(1000,1000,'sword');
+
+        //add shield
+        this.shield1 = this.physics.add.sprite(1000,1000,'shield');
+
+        //add scorer
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '20px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+              top: 5,
+              bottom: 5,
+            },
+            fixedWidth: 110
+          }
+        this.score = 0;
+        this.credit = 0;   //credit is for sword/shield appear
+        this.scoreText = this.add.text(quarterX/4, quarterY/4, this.score, scoreConfig);
+
+        //add physics collider
+        this.physics.add.collider(this.p1,this.shit1, ()=>{
+            if (haveSword){
+                this.score += 20;
+                this.credit += 20;
+                //reset
+                this.shit1.x = game.config.width;
+                this.shit1.y = this.p1.y;
+                this.scoreText.text = this.score;
+            }else if(haveShield){
+                //reset
+                this.shit1.x = game.config.width;
+                this.shit1.y = this.p1.y;
+            }else{
+                this.playerVelocity = 0;
+                this.enemyVelocity = 0;
+                this.rewardVelocity1 = 0;
+                this.rewardVelocity2 = 0;
+                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+            }
+            
+        },null, this);
+
+        this.physics.add.collider(this.p1,this.coin1, ()=>{
+            this.score += 10;
+            this.credit += 10;
+            this.scoreText.text = this.score;
+            //reset
+            this.coin1.x = game.config.width;
+            if (Math.round(Math.random()) == 0){
+                this.coin1.y = quarterY - quarterY/4;
+            }else{
+                this.coin1.y = centerY*2 - quarterY/4;
+            }
+        },null, this);
+        
+        this.physics.add.collider(this.p1,this.sword1,()=>{
+            haveSword = true;
+        },null, this);
+
+        this.physics.add.collider(this.p1,this.shield1,()=>{
+            haveShield = true;
+        },null, this);
+        
+    
+    }
+
+    update() {
+
+        if(this.input.keyboard.createCursorKeys().up.isDown) {
+            this.p1.setVelocityY(-this.playerVelocity);
+            this.p1.setVelocityX(0);
+        } else{
+            this.p1.setVelocityY(this.playerVelocity);
+            this.p1.setVelocityX(0);
+        }
+
+        this.shit1.setVelocityX(-this.enemyVelocity);
+        this.shit1.setVelocityY(0);
+        if (this.shit1.x <= 0 - 128) {
+            //reset
+            this.shit1.x = game.config.width;
+            // if (Math.round(Math.random()) == 0){
+            //     this.shit1.y = centerY - quarterY/4;
+            // }else{
+            //     this.shit1.y = centerY + quarterY - quarterY/4;
+            // }
+            this.shit1.y = this.p1.y;
+        }
+
+        this.coin1.setVelocityX(-this.rewardVelocity1);
+        this.coin1.setVelocityY(0);
+        if (this.coin1.x <= 0 - 64) {
+            //reset
+            this.coin1.x = game.config.width;
+            if (Math.round(Math.random()) == 0){
+                this.coin1.y = quarterY - quarterY/4;
+            }else{
+                this.coin1.y = centerY*2 - quarterY/4;
+            }
+        }
+
+        //make sword/shield appear if score larger than 50
+        if (this.credit > 100 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
+            this.credit = 0;
+            if (Math.round(Math.random()) == 0 ){
+                this.sword1.x = game.config.width;
+                this.sword1.y = centerY;
+                swordMoving = true;
+            }else{
+                this.shield1.x = game.config.width;
+                this.shield1.y = centerY;
+                shieldMoving = true;
+            }
+            //increase velocity
+            this.playerVelocity = this.playerVelocity*1.1;
+            this.enemyVelocity =  this.enemyVelocity*1.1;
+            this.rewardVelocity1 = this.rewardVelocity1*1.1;
+            this.rewardVelocity2 = this.rewardVelocity2*1.1;
+        }
+
+        if (swordMoving == true){
+            this.sword1.setVelocityX(-this.rewardVelocity2);
+            this.sword1.setVelocityY(0);
+            if (this.sword1.x <= 0 - 64){
+                swordMoving = false;
+            }
+        }
+
+        if (shieldMoving == true){
+            this.shield1.setVelocityX(-this.rewardVelocity2);
+            this.shield1.setVelocityY(0);
+            if (this.shield1.x <= 0 - 64){
+                shieldMoving = false;
+            }
+        }
+
+        if (haveSword){
+            swordMoving = false;
+            this.sword1.x = game.config.width - quarterX;
+            this.sword1.y = quarterY/4;
+            this.sword1.setVelocityX(0);
+            this.sword1.setVelocityY(0);
+            timer+=1;
+        }
+
+        if (haveShield){
+            shieldMoving = false;
+            this.shield1.x = game.config.width - quarterX;
+            this.shield1.y = quarterY/4;
+            this.shield1.setVelocityX(0);
+            this.shield1.setVelocityY(0);
+            timer+=1;
+        }
+
+        if (timer >=60*13){
+            haveSword = false;
+            this.sword1.x = 1000;
+            this.sword1.y = 1000;
+            haveShield = false;
+            this.shield1.x = 1000;
+            this.shield1.y = 1000;
+            timer = 0;
+        }else if (timer >= 60*10){
+            this.scoreText.text = "Attention";
+        }
+        
+
+
+        
+
+    }
+
+    
+
+
+}
