@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
     preload() {
         this.load.image('bg','assets/bg.png');
         this.load.image('player','assets/player.png');
-        this.load.image('shit','assets/shit.png');
+        this.load.image('foe','assets/foe.png');
         this.load.image('coin','assets/coin.png');
         this.load.image('sword','assets/sword.png');
         this.load.image('shield','assets/shield.png');
@@ -26,9 +26,12 @@ class Play extends Phaser.Scene{
         this.p1 = this.physics.add.sprite(0,centerY,'player').setScale(0.5);
         this.p1.setCollideWorldBounds(true);
 
-        //add shit
-        this.shit1 = this.physics.add.sprite(centerX,game.config.height- quarterY/4,'shit').setScale(0.5);
-        this.shit1.body.setSize(32,32);
+        //add foe
+        this.foe1 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'foe').setScale(0.5);
+        this.foe1.body.setSize(32,32);
+
+        this.foe2 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'foe');
+        this.foe2.body.setSize(64,64);
 
         //add coin
         this.coin1 = this.physics.add.sprite(centerX,centerY,'coin');
@@ -57,18 +60,38 @@ class Play extends Phaser.Scene{
         this.scoreText = this.add.text(quarterX/4, quarterY/4, this.score, scoreConfig);
 
         //add physics collider
-        this.physics.add.collider(this.p1,this.shit1, ()=>{
+        this.physics.add.collider(this.p1,this.foe1, ()=>{
             if (haveSword){
                 this.score += 20;
-                this.credit += 20;
                 //reset
-                this.shit1.x = game.config.width;
-                this.shit1.y = this.p1.y;
+                this.foe1.x = game.config.width;
+                this.foe1.y = this.p1.y;
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
-                this.shit1.x = game.config.width;
-                this.shit1.y = this.p1.y;
+                this.foe1.x = game.config.width;
+                this.foe1.y = this.p1.y;
+            }else{
+                this.playerVelocity = 0;
+                this.enemyVelocity = 0;
+                this.rewardVelocity1 = 0;
+                this.rewardVelocity2 = 0;
+                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+            }
+            
+        },null, this);
+
+        this.physics.add.collider(this.p1,this.foe2, ()=>{
+            if (haveSword){
+                this.score += 20;
+                //reset
+                this.foe2.x = game.config.width;
+                this.foe2.y = this.p1.y;
+                this.scoreText.text = this.score;
+            }else if(haveShield){
+                //reset
+                this.foe2.x = game.config.width;
+                this.foe2.y = this.p1.y;
             }else{
                 this.playerVelocity = 0;
                 this.enemyVelocity = 0;
@@ -92,6 +115,7 @@ class Play extends Phaser.Scene{
             }
         },null, this);
         
+        
         this.physics.add.collider(this.p1,this.sword1,()=>{
             haveSword = true;
         },null, this);
@@ -113,18 +137,47 @@ class Play extends Phaser.Scene{
             this.p1.setVelocityX(0);
         }
 
-        this.shit1.setVelocityX(-this.enemyVelocity);
-        this.shit1.setVelocityY(0);
-        if (this.shit1.x <= 0 - 128) {
+        this.foe1.setVelocityX(-this.enemyVelocity);
+        this.foe1.setVelocityY(0);
+        if (this.foe1.x <= 0 - 128) {
             //reset
-            this.shit1.x = game.config.width;
+            this.foe1.x = game.config.width;
             // if (Math.round(Math.random()) == 0){
-            //     this.shit1.y = centerY - quarterY/4;
+            //     this.foe1.y = centerY - quarterY/4;
             // }else{
-            //     this.shit1.y = centerY + quarterY - quarterY/4;
+            //     this.foe1.y = centerY + quarterY - quarterY/4;
             // }
-            this.shit1.y = this.p1.y;
+            this.foe1.y = this.p1.y;
         }
+
+        if (this.score >= 300 && this.score <600){
+            this.foe2.setVelocityX(-this.enemyVelocity * 1);
+            this.foe2.setVelocityY(0);
+            if (this.foe2.x <= 0 - 1000) {
+                //reset
+                this.foe2.x = game.config.width;
+                // if (Math.round(Math.random()) == 0){
+                //     this.foe1.y = centerY - quarterY/4;
+                // }else{
+                //     this.foe1.y = centerY + quarterY - quarterY/4;
+                // }
+                this.foe2.y = this.p1.y;
+            }
+        }else if(this.score >= 600){
+            this.foe2.setVelocityX(-this.enemyVelocity * 2);
+            this.foe2.setVelocityY(0);
+            if (this.foe2.x <= 0 - 1000) {
+                //reset
+                this.foe2.x = game.config.width;
+                // if (Math.round(Math.random()) == 0){
+                //     this.foe1.y = centerY - quarterY/4;
+                // }else{
+                //     this.foe1.y = centerY + quarterY - quarterY/4;
+                // }
+                this.foe2.y = this.p1.y;
+            }
+        }
+
 
         this.coin1.setVelocityX(-this.rewardVelocity1);
         this.coin1.setVelocityY(0);
