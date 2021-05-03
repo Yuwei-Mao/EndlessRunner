@@ -53,23 +53,23 @@ class Play extends Phaser.Scene{
               top: 5,
               bottom: 5,
             },
-            fixedWidth: 110
+            fixedWidth: 160
           }
         this.score = 0;
         this.credit = 0;   //credit is for sword/shield appear
-        this.scoreText = this.add.text(quarterX/4, quarterY/4, this.score, scoreConfig);
+        this.scoreText = this.add.text(quarterX/4, quarterY/4, "SPACE TO JUMP", scoreConfig);
 
         //add physics collider
         this.physics.add.collider(this.p1,this.foe1, ()=>{
             if (haveSword){
                 this.score += 20;
                 //reset
-                this.foe1.x = game.config.width;
+                this.foe1.x = centerX*3;
                 this.foe1.y = this.p1.y;
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
-                this.foe1.x = game.config.width;
+                this.foe1.x = centerX*3;
                 this.foe1.y = this.p1.y;
             }else{
                 this.playerVelocity = 0;
@@ -85,12 +85,12 @@ class Play extends Phaser.Scene{
             if (haveSword){
                 this.score += 20;
                 //reset
-                this.foe2.x = game.config.width;
+                this.foe2.x = centerX*6;
                 this.foe2.y = this.p1.y;
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
-                this.foe2.x = game.config.width;
+                this.foe2.x = centerX*6;
                 this.foe2.y = this.p1.y;
             }else{
                 this.playerVelocity = 0;
@@ -123,13 +123,15 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.p1,this.shield1,()=>{
             haveShield = true;
         },null, this);
+
+        
         
     
     }
 
     update() {
 
-        if(this.input.keyboard.createCursorKeys().up.isDown) {
+        if(this.input.keyboard.createCursorKeys().space.isDown) {
             this.p1.setVelocityY(-this.playerVelocity);
             this.p1.setVelocityX(0);
         } else{
@@ -141,7 +143,7 @@ class Play extends Phaser.Scene{
         this.foe1.setVelocityY(0);
         if (this.foe1.x <= 0 - 128) {
             //reset
-            this.foe1.x = game.config.width;
+            this.foe1.x = centerX*3;
             // if (Math.round(Math.random()) == 0){
             //     this.foe1.y = centerY - quarterY/4;
             // }else{
