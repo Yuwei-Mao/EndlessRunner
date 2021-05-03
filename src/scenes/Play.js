@@ -10,6 +10,7 @@ class Play extends Phaser.Scene{
         this.load.image('coin','assets/coin.png');
         this.load.image('sword','assets/sword.png');
         this.load.image('shield','assets/shield.png');
+        this.load.image('banana','assets/banana.png');
     }
 
     create() {
@@ -17,7 +18,7 @@ class Play extends Phaser.Scene{
         this.playerVelocity = 300;
         this.enemyVelocity = 350;
         this.rewardVelocity1 = 400;
-        this.rewardVelocity2 = 400;
+        this.rewardVelocity2 = 500;
 
         //Place background
         this.bg = this.add.tileSprite(0,0,640,480,'bg').setOrigin(0,0);
@@ -41,6 +42,10 @@ class Play extends Phaser.Scene{
 
         //add shield
         this.shield1 = this.physics.add.sprite(1000,1000,'shield');
+
+        //add banana
+        this.banana1 = this.physics.add.sprite(centerX*2, game.config.height-quarterY/4,'banana');
+        this.banana1.body.setSize(16,16);
 
         //add scorer
         let scoreConfig = {
@@ -124,12 +129,28 @@ class Play extends Phaser.Scene{
             haveShield = true;
         },null, this);
 
+        this.physics.add.collider(this.p1,this.banana1,()=>{
+            if (haveShield){
+                //reset the position of banana
+                this.banana1.x = centerX*3;
+            }else{
+                this.playerVelocity = 0;
+                this.enemyVelocity = 0;
+                this.rewardVelocity1 = 0;
+                this.rewardVelocity2 = 0;
+                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+            }
+            
+        },null,this);
+
         
         
     
     }
 
     update() {
+
+
 
         if(this.input.keyboard.createCursorKeys().space.isDown) {
             this.p1.setVelocityY(-this.playerVelocity);
@@ -139,11 +160,18 @@ class Play extends Phaser.Scene{
             this.p1.setVelocityX(0);
         }
 
+
+        this.banana1.setVelocityX(-this.enemyVelocity);
+        this.banana1.setVelocityY(0);
+        if (this.banana1.x <=0 - 500){
+             this.banana1.x = game.config.width;
+         }
+
         this.foe1.setVelocityX(-this.enemyVelocity);
         this.foe1.setVelocityY(0);
-        if (this.foe1.x <= 0 - 128) {
+        if (this.foe1.x <= 0 - 500) {
             //reset
-            this.foe1.x = centerX*3;
+            this.foe1.x = game.config.width;
             // if (Math.round(Math.random()) == 0){
             //     this.foe1.y = centerY - quarterY/4;
             // }else{
@@ -192,6 +220,7 @@ class Play extends Phaser.Scene{
                 this.coin1.y = centerY*2 - quarterY/4;
             }
         }
+
 
         //make sword/shield appear if score larger than 50
         if (this.credit > 100 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
