@@ -41,9 +41,13 @@ class Play extends Phaser.Scene{
         this.p1 = this.physics.add.sprite(0,centerY,'cha_atlas','skating0001').setScale(SCALE/2);
         this.p1.setCollideWorldBounds(true);
         this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+        
 
 
         //creating animation for player
+        
+        
+        // skating animation
         this.anims.create({ 
             key: 'skate', 
             frames: this.anims.generateFrameNames('cha_atlas', {      
@@ -57,6 +61,8 @@ class Play extends Phaser.Scene{
             repeat: -1 
         });
         
+
+        //jump animation
         this.anims.create({
             key: 'jump',
             defaultTextureKey: 'cha_atlas',
@@ -67,12 +73,65 @@ class Play extends Phaser.Scene{
             ],   
         });
 
+        //skating animation while having sword
+        this.anims.create({
+            key: 'skatingwithSword',
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {      
+                prefix: 'holdingSword',
+                start: 1,
+                end: 6,
+                suffix: '',
+                zeroPad: 4 
+            }), 
+            frameRate: 8,
+            repeat: -1 
+        });
+        
+
+        //skating animation while having shield
+        this.anims.create({
+            key: 'skatingwithShield',
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {      
+                prefix: 'holdingShield',
+                start: 1,
+                end: 6,
+                suffix: '',
+                zeroPad: 4 
+            }), 
+            frameRate: 8,
+            repeat: -1 
+        });
+
+
+
+        // poke sword animation
+        this.anims.create({
+            key: 'attack',
+            defaultTextureKey: 'action_atlas',
+            frames: [
+                
+                { frame: 'pokingSword0003' },
+                
+            ],   
+        });
+
+        // use shield defend animation
+        this.anims.create({
+            key: 'defend',
+            defaultTextureKey: 'action_atlas',
+            frames: [
+                
+                { frame: 'wavingShield0003' },
+                
+            ],   
+        });
+
 
         //add monster
         this.foe1 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
         this.foe1.body.setAllowGravity(false);
         this.foe1.anims.play('monstermove');
-        //this.monster1.body.setSize(32,32);
+        //this.foe1.body.setSize(32,32);
 
         this.foe2 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
         this.foe2.body.setAllowGravity(false);
@@ -90,9 +149,9 @@ class Play extends Phaser.Scene{
         this.sword1.anims.play('swordmove');
 
         //add shield
-        this.shield1 = this.physics.add.sprite(1000,1000,'shield');
-        this.sword1.body.setAllowGravity(false);
-        this.sword1.anims.play('shiledmove');
+        this.shield1 = this.physics.add.sprite(1000,1000,'shield_atlas','shield0001');
+        this.shield1.body.setAllowGravity(false);
+        this.shield1.anims.play('shieldmove');
 
         //add banana
         this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana0001');
@@ -206,7 +265,6 @@ class Play extends Phaser.Scene{
             
         },null,this);
 
-        this.physics.add.collider(this.p1,[this.upwall,this.bottomwall]);
 
         
     

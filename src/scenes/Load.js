@@ -22,8 +22,9 @@ class Load extends Phaser.Scene {
         this.load.atlas('monster_atlas', 'monster.png', 'monster.json');
         this.load.atlas('banana_atlas', 'banana.png', 'banana.json');
         this.load.atlas('cha_atlas', 'character.png', 'character.json');
+        this.load.atlas('action_atlas','action.png','action.json');
+        this.load.atlas('holditemskating_atlas','holdingitemSkating.png','holdingitemSkating.json');
         this.load.bitmapFont('gem', 'gem.png', 'gem.xml');
-        this.load.atlas('platformer_atlas', 'kenny_sheet.png', 'kenny_sheet.json');
     }
 
     create() {
