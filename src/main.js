@@ -45,4 +45,5 @@ let shieldMoving = false;
 
 //define timer
 let timer = 0;
+let timerForBg = 0;
 

@@ -4,13 +4,18 @@ class Play extends Phaser.Scene{
     }
 
     preload() {
-        this.load.image('bg','assets/bg.png');
+        
         this.load.image('player','assets/player.png');
         this.load.image('foe','assets/foe.png');
         this.load.image('coin','assets/coin.png');
         this.load.image('sword','assets/sword.png');
         this.load.image('shield','assets/shield.png');
         this.load.image('banana','assets/banana.png');
+
+        //load background
+        this.load.image('sea','assets/sea_bg.png');
+        this.load.image('forest','assets/forest_bg.png');
+
     }
 
     create() {
@@ -30,7 +35,8 @@ class Play extends Phaser.Scene{
         this.rewardVelocity2 = 500;
 
         //Place background
-        this.bg = this.add.tileSprite(game.config.width, game.config.height,'bg').setOrigin(0,0);
+        this.bg = this.add.tileSprite(0, 0,960,640,'sea').setOrigin(0,0);
+        this.bg2 = this.add.tileSprite(2000,2000,960,640,'forest').setOrigin(0,0);
         
         //add player
         this.p1 = this.physics.add.sprite(0,centerY,'player').setScale(0.5);
@@ -53,8 +59,17 @@ class Play extends Phaser.Scene{
         this.shield1 = this.physics.add.sprite(1000,1000,'shield');
 
         //add banana
-        this.banana1 = this.physics.add.sprite(centerX*2, game.config.height-quarterY/4,'banana');
+        this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana');
         this.banana1.body.setSize(16,16);
+
+        //add up and dowm air wall
+        this.upwall = this.physics.add.sprite(0,0);
+        this.upwall.setSize(960,100);
+        this.upwall.setImmovable(true);
+
+        this.bottomwall = this.physics.add.sprite(0,600);
+        this.bottomwall.setSize(960,60);
+        this.bottomwall.setImmovable(true);
 
         //add scorer
         let scoreConfig = {
@@ -125,7 +140,7 @@ class Play extends Phaser.Scene{
             if (Math.round(Math.random()) == 0){
                 this.coin1.y = quarterY - quarterY/4;
             }else{
-                this.coin1.y = centerY*2 - quarterY/4;
+                this.coin1.y = 550;
             }
         },null, this);
         
@@ -152,6 +167,8 @@ class Play extends Phaser.Scene{
             
         },null,this);
 
+        this.physics.add.collider(this.p1,[this.upwall,this.bottomwall]);
+
         
         
     
@@ -159,8 +176,26 @@ class Play extends Phaser.Scene{
 
     update() {
 
+        this.bg.tilePositionX += this.playerVelocity/100;
+        this.bg2.tilePositionX += this.playerVelocity/100;
+        
+        if (timerForBg >= 60*10) {
+            timerForBg =0;
+            if (this.bg.x ==2000){
+                this.bg2.x = 2000;
+                this.bg.x = 0;
+                this.bg.y = 0;
+            }else{
+                this.bg.x = 2000;
+            this.bg2.x = 0;
+            this.bg2.y = 0;
+            }
+            
+        }else{
+            timerForBg +=1;
+        }
 
-
+        
         if(this.input.keyboard.createCursorKeys().space.isDown) {
             this.p1.setVelocityY(-this.playerVelocity);
             this.p1.setVelocityX(0);
@@ -170,7 +205,7 @@ class Play extends Phaser.Scene{
         }
 
 
-        this.banana1.setVelocityX(-this.enemyVelocity);
+        this.banana1.x+=-this.playerVelocity/100;
         this.banana1.setVelocityY(0);
         if (this.banana1.x <=0 - 500){
              this.banana1.x = game.config.width;
@@ -215,6 +250,8 @@ class Play extends Phaser.Scene{
                 // }
                 this.foe2.y = this.p1.y;
             }
+            
+            
         }
 
 
@@ -226,7 +263,7 @@ class Play extends Phaser.Scene{
             if (Math.round(Math.random()) == 0){
                 this.coin1.y = quarterY - quarterY/4;
             }else{
-                this.coin1.y = centerY*2 - quarterY/4;
+                this.coin1.y = 550;
             }
         }
 
