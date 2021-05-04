@@ -4,13 +4,6 @@ class Play extends Phaser.Scene{
     }
 
     preload() {
-        
-        this.load.image('player','assets/player.png');
-        this.load.image('foe','assets/foe.png');
-        this.load.image('coin','assets/coin.png');
-        this.load.image('sword','assets/sword.png');
-        this.load.image('shield','assets/shield.png');
-        this.load.image('banana','assets/banana.png');
 
         //load background
         this.load.image('sea','assets/sea_bg.png');
@@ -18,7 +11,7 @@ class Play extends Phaser.Scene{
 
     }
 
-    create() {
+    create() {     
         let titleSnap = this.add.image(centerX, centerY, 'titlesnapshot').setOrigin(0.5);
         this.tweens.add({
             targets: titleSnap,
@@ -29,47 +22,93 @@ class Play extends Phaser.Scene{
         });
 
         //define constants of physics
+        this.MAX_JUMPS = 1; 
+        this.JUMP_VELOCITY = -700;
+        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_Y_VEL = 5000;
+        this.physics.world.gravity.y = 2600;
         this.playerVelocity = 300;
         this.enemyVelocity = 350;
         this.rewardVelocity1 = 400;
         this.rewardVelocity2 = 500;
+
 
         //Place background
         this.bg = this.add.tileSprite(0, 0,960,640,'sea').setOrigin(0,0);
         this.bg2 = this.add.tileSprite(2000,2000,960,640,'forest').setOrigin(0,0);
         
         //add player
-        this.p1 = this.physics.add.sprite(0,centerY,'player').setScale(0.5);
+        this.p1 = this.physics.add.sprite(0,centerY,'cha_atlas','skating0001').setScale(SCALE/2);
         this.p1.setCollideWorldBounds(true);
+        this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
 
-        //add foe
-        this.foe1 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'foe').setScale(0.5);
-        this.foe1.body.setSize(32,32);
 
-        this.foe2 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'foe');
-        this.foe2.body.setSize(64,64);
+        //creating animation for player
+        this.anims.create({ 
+            key: 'skate', 
+            frames: this.anims.generateFrameNames('cha_atlas', {      
+                prefix: 'skating',
+                start: 1,
+                end: 5,
+                suffix: '',
+                zeroPad: 4 
+            }), 
+            frameRate: 8,
+            repeat: -1 
+        });
+        
+        this.anims.create({
+            key: 'jump',
+            defaultTextureKey: 'cha_atlas',
+            frames: [
+                
+                { frame: 'jump0004' },
+                
+            ],   
+        });
+
+
+        //add monster
+        this.foe1 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
+        this.foe1.body.setAllowGravity(false);
+        this.foe1.anims.play('monstermove');
+        //this.monster1.body.setSize(32,32);
+
+        this.foe2 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
+        this.foe2.body.setAllowGravity(false);
+        this.foe2.anims.play('monstermove');
+        //this.foe2.body.setSize(64,64);
 
         //add coin
-        this.coin1 = this.physics.add.sprite(centerX,centerY,'coin');
+        this.coin1 = this.physics.add.sprite(centerX,centerY,'coin_atlas', 'coin0001').setScale(SCALE/1.5);
+        this.coin1.body.setAllowGravity(false);
+        this.coin1.anims.play('coinmove');
 
         //add sword
-        this.sword1 = this.physics.add.sprite(1000,1000,'sword');
+        this.sword1 = this.physics.add.sprite(1000,1000,'sword_atlas','sword0001');
+        this.sword1.body.setAllowGravity(false);
+        this.sword1.anims.play('swordmove');
 
         //add shield
         this.shield1 = this.physics.add.sprite(1000,1000,'shield');
+        this.sword1.body.setAllowGravity(false);
+        this.sword1.anims.play('shiledmove');
 
         //add banana
-        this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana');
-        this.banana1.body.setSize(16,16);
+        this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana0001');
+        this.banana1.body.setAllowGravity(false);
+        this.banana1.anims.play('bananamove');
 
         //add up and dowm air wall
         this.upwall = this.physics.add.sprite(0,0);
         this.upwall.setSize(960,100);
         this.upwall.setImmovable(true);
+        this.upwall.body.setAllowGravity(false);
 
         this.bottomwall = this.physics.add.sprite(0,600);
         this.bottomwall.setSize(960,60);
         this.bottomwall.setImmovable(true);
+        this.bottomwall.body.setAllowGravity(false);
 
         //add scorer
         let scoreConfig = {
@@ -170,11 +209,30 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.p1,[this.upwall,this.bottomwall]);
 
         
-        
+    
+
+        // set up Phaser-provided cursor key input
+        cursors = this.input.keyboard.createCursorKeys();
     
     }
 
     update() {
+
+        // play character skate animation
+        if(!gameOver){
+        this.p1.anims.play('skate', true);
+        }
+
+
+        // jump animation
+	    if(!this.p1.body.touching.down) {
+            this.p1.anims.play('jump', true);
+        }
+
+        if(this.p1.body.touching.down && Phaser.Input.Keyboard.JustDown(cursors.space)) {
+            this.p1.body.setVelocityY(this.JUMP_VELOCITY);
+        }
+
 
         this.bg.tilePositionX += this.playerVelocity/100;
         this.bg2.tilePositionX += this.playerVelocity/100;
