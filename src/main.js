@@ -33,7 +33,6 @@ let quarterX = game.config.width / 4;
 let quarterY = game.config.height / 4;
 let w = game.config.width;
 let h = game.config.height;
-const tileSize = 32;
 const textSpacer = 64;
 const SCALE = 4;
 let cursors;
@@ -43,7 +42,6 @@ let haveSword = false;
 let haveShield = false;
 let swordMoving = false;
 let shieldMoving = false;
-let gameOver =false;
 
 //define timer
 let timer = 0;

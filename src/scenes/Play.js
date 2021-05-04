@@ -11,7 +11,7 @@ class Play extends Phaser.Scene{
 
     }
 
-    create() {     
+    create() {
         let titleSnap = this.add.image(centerX, centerY, 'titlesnapshot').setOrigin(0.5);
         this.tweens.add({
             targets: titleSnap,
@@ -22,7 +22,7 @@ class Play extends Phaser.Scene{
         });
 
         //define constants of physics
-        this.MAX_JUMPS = 1; 
+        this.MAX_JUMPS = 1;
         this.JUMP_VELOCITY = -700;
         this.MAX_X_VEL = 500;   // pixels/second
         this.MAX_Y_VEL = 5000;
@@ -36,70 +36,71 @@ class Play extends Phaser.Scene{
         //Place background
         this.bg = this.add.tileSprite(0, 0,960,640,'sea').setOrigin(0,0);
         this.bg2 = this.add.tileSprite(2000,2000,960,640,'forest').setOrigin(0,0);
-        
+
         //add player
         this.p1 = this.physics.add.sprite(0,centerY,'cha_atlas','skating0001').setScale(SCALE/2);
         this.p1.setCollideWorldBounds(true);
         this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-        
+
+
 
 
         //creating animation for player
-        
-        
+
+
         // skating animation
-        this.anims.create({ 
-            key: 'skate', 
-            frames: this.anims.generateFrameNames('cha_atlas', {      
+        this.anims.create({
+            key: 'skate',
+            frames: this.anims.generateFrameNames('cha_atlas', {
                 prefix: 'skating',
                 start: 1,
                 end: 5,
                 suffix: '',
-                zeroPad: 4 
-            }), 
+                zeroPad: 4
+            }),
             frameRate: 8,
-            repeat: -1 
+            repeat: -1
         });
-        
+
 
         //jump animation
         this.anims.create({
             key: 'jump',
             defaultTextureKey: 'cha_atlas',
             frames: [
-                
+
                 { frame: 'jump0004' },
-                
-            ],   
+
+            ],
         });
 
         //skating animation while having sword
         this.anims.create({
             key: 'skatingwithSword',
-            frames: this.anims.generateFrameNames('holditemskating_atlas', {      
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {
                 prefix: 'holdingSword',
                 start: 1,
                 end: 6,
                 suffix: '',
-                zeroPad: 4 
-            }), 
+                zeroPad: 4
+            }),
             frameRate: 8,
-            repeat: -1 
+            repeat: -1
         });
-        
+
 
         //skating animation while having shield
         this.anims.create({
             key: 'skatingwithShield',
-            frames: this.anims.generateFrameNames('holditemskating_atlas', {      
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {
                 prefix: 'holdingShield',
                 start: 1,
                 end: 6,
                 suffix: '',
-                zeroPad: 4 
-            }), 
+                zeroPad: 4
+            }),
             frameRate: 8,
-            repeat: -1 
+            repeat: -1
         });
 
 
@@ -109,10 +110,10 @@ class Play extends Phaser.Scene{
             key: 'attack',
             defaultTextureKey: 'action_atlas',
             frames: [
-                
+
                 { frame: 'pokingSword0003' },
-                
-            ],   
+
+            ],
         });
 
         // use shield defend animation
@@ -120,10 +121,63 @@ class Play extends Phaser.Scene{
             key: 'defend',
             defaultTextureKey: 'action_atlas',
             frames: [
-                
+
                 { frame: 'wavingShield0003' },
-                
-            ],   
+
+            ],
+        });
+
+        //skating animation while having sword
+        this.anims.create({
+            key: 'skatingwithSword',
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {
+                prefix: 'holdingSword',
+                start: 1,
+                end: 6,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+
+        //skating animation while having shield
+        this.anims.create({
+            key: 'skatingwithShield',
+            frames: this.anims.generateFrameNames('holditemskating_atlas', {
+                prefix: 'holdingShield',
+                start: 1,
+                end: 6,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+
+
+        // poke sword animation
+        this.anims.create({
+            key: 'attack',
+            defaultTextureKey: 'action_atlas',
+            frames: [
+
+                { frame: 'pokingSword0003' },
+
+            ],
+        });
+
+        // use shield defend animation
+        this.anims.create({
+            key: 'defend',
+            defaultTextureKey: 'action_atlas',
+            frames: [
+
+                { frame: 'wavingShield0003' },
+
+            ],
         });
 
 
@@ -160,7 +214,7 @@ class Play extends Phaser.Scene{
 
         //add up and dowm air wall
         this.upwall = this.physics.add.sprite(0,0);
-        this.upwall.setSize(960,100);
+        this.upwall.setSize(960,170);
         this.upwall.setImmovable(true);
         this.upwall.body.setAllowGravity(false);
 
@@ -205,7 +259,7 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
-            
+
         },null, this);
 
         this.physics.add.collider(this.p1,this.foe2, ()=>{
@@ -226,7 +280,7 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
-            
+
         },null, this);
 
         this.physics.add.collider(this.p1,this.coin1, ()=>{
@@ -241,8 +295,8 @@ class Play extends Phaser.Scene{
                 this.coin1.y = 550;
             }
         },null, this);
-        
-        
+
+
         this.physics.add.collider(this.p1,this.sword1,()=>{
             haveSword = true;
         },null, this);
@@ -262,16 +316,16 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
-            
+
         },null,this);
 
 
-        
-    
+
+
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
-    
+
     }
 
     update() {
@@ -294,7 +348,7 @@ class Play extends Phaser.Scene{
 
         this.bg.tilePositionX += this.playerVelocity/100;
         this.bg2.tilePositionX += this.playerVelocity/100;
-        
+
         if (timerForBg >= 60*10) {
             timerForBg =0;
             if (this.bg.x ==2000){
@@ -306,12 +360,12 @@ class Play extends Phaser.Scene{
             this.bg2.x = 0;
             this.bg2.y = 0;
             }
-            
+
         }else{
             timerForBg +=1;
         }
 
-        
+
         if(this.input.keyboard.createCursorKeys().space.isDown) {
             this.p1.setVelocityY(-this.playerVelocity);
             this.p1.setVelocityX(0);
@@ -366,8 +420,8 @@ class Play extends Phaser.Scene{
                 // }
                 this.foe2.y = this.p1.y;
             }
-            
-            
+
+
         }
 
 
@@ -448,14 +502,18 @@ class Play extends Phaser.Scene{
         }else if (timer >= 60*10){
             this.scoreText.text = "Attention";
         }
-        
 
 
-        
+
+
 
     }
 
-    
+    reset(){
+
+    }
+
+
 
 
 }
