@@ -45,7 +45,7 @@ class Menu extends Phaser.Scene{
             defaultTextureKey: 'coin_atlas',
             repeat: -1
         });
-        // play coin animation
+        // go ahead and start the flapping animation since the fly is non-interactive
         this.coin.anims.play('coinmove');
 
         this.anims.create({
@@ -59,7 +59,7 @@ class Menu extends Phaser.Scene{
             defaultTextureKey: 'shield_atlas',
             repeat: -1
         });
-        // play shield animation
+        // go ahead and start the flapping animation since the fly is non-interactive
         this.shield.anims.play('shieldmove');
 
         this.anims.create({
@@ -73,7 +73,7 @@ class Menu extends Phaser.Scene{
             defaultTextureKey: 'sword_atlas',
             repeat: -1
         });
-        // play sword animation
+        // go ahead and start the flapping animation since the fly is non-interactive
         this.sword.anims.play('swordmove');
 
         this.anims.create({
@@ -88,7 +88,7 @@ class Menu extends Phaser.Scene{
             defaultTextureKey: 'monster_atlas',
             repeat: -1
         });
-        // play monster animation
+        // go ahead and start the flapping animation since the fly is non-interactive
         this.monster.anims.play('monstermove');
 
         this.anims.create({
@@ -103,7 +103,7 @@ class Menu extends Phaser.Scene{
             defaultTextureKey: 'banana_atlas',
             repeat: -1
         });
-        // play bananna animation
+        // go ahead and start the flapping animation since the fly is non-interactive
         this.banana.anims.play('bananamove');
 
         
