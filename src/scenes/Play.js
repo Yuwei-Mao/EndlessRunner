@@ -330,20 +330,20 @@ class Play extends Phaser.Scene{
 
     update() {
 
-        // play character skate animation
-        if(!gameOver){
-        this.p1.anims.play('skate', true);
-        }
+        // // play character skate animation
+        // if(!gameOver){
+        // this.p1.anims.play('skate', true);
+        // }
 
 
-        // jump animation
-	    if(!this.p1.body.touching.down) {
-            this.p1.anims.play('jump', true);
-        }
+        // // jump animation
+	    // if(!this.p1.body.touching.down) {
+        //     this.p1.anims.play('jump', true);
+        // }
 
-        if(this.p1.body.touching.down && Phaser.Input.Keyboard.JustDown(cursors.space)) {
-            this.p1.body.setVelocityY(this.JUMP_VELOCITY);
-        }
+        // if(this.p1.body.touching.down && Phaser.Input.Keyboard.JustDown(cursors.space)) {
+        //     this.p1.body.setVelocityY(this.JUMP_VELOCITY);
+        // }
 
 
         this.bg.tilePositionX += this.playerVelocity/100;
