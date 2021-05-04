@@ -50,21 +50,25 @@ class Play extends Phaser.Scene{
         this.foe2.body.setSize(64,64);
 
         //add coin
-        this.coin1 = this.physics.add.sprite(centerX,centerY,'coin');
+        this.coin1 = this.physics.add.sprite(centerX,centerY,'coin_atlas', 'coin0001').setScale(2);
+        this.coin1.anims.play('coinmove');
 
         //add sword
         this.sword1 = this.physics.add.sprite(1000,1000,'sword');
+        this.sword1.anims.play('swordmove');
 
         //add shield
         this.shield1 = this.physics.add.sprite(1000,1000,'shield');
+        this.shield1.anims.play('shieldmove');
 
         //add banana
-        this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana');
+        this.banana1 = this.physics.add.sprite(centerX*2, 550,'banana_atlas', 'banana0001');
         this.banana1.body.setSize(16,16);
+        //this.banana1.anims.play('bananamove');
 
         //add up and dowm air wall
         this.upwall = this.physics.add.sprite(0,0);
-        this.upwall.setSize(960,100);
+        this.upwall.setSize(960,170);
         this.upwall.setImmovable(true);
 
         this.bottomwall = this.physics.add.sprite(0,600);
@@ -336,6 +340,10 @@ class Play extends Phaser.Scene{
 
 
         
+
+    }
+
+    reset(){
 
     }
 
