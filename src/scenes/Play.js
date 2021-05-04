@@ -13,6 +13,15 @@ class Play extends Phaser.Scene{
     }
 
     create() {
+        let titleSnap = this.add.image(centerX, centerY, 'titlesnapshot').setOrigin(0.5);
+        this.tweens.add({
+            targets: titleSnap,
+            duration: 4500,
+            alpha: { from: 1, to: 0 },
+            scale: { from: 1, to: 0 },
+            repeat: 0
+        });
+
         //define constants of physics
         this.playerVelocity = 300;
         this.enemyVelocity = 350;
@@ -20,7 +29,7 @@ class Play extends Phaser.Scene{
         this.rewardVelocity2 = 400;
 
         //Place background
-        this.bg = this.add.tileSprite(0,0,640,480,'bg').setOrigin(0,0);
+        this.bg = this.add.tileSprite(game.config.width, game.config.height,'bg').setOrigin(0,0);
         
         //add player
         this.p1 = this.physics.add.sprite(0,centerY,'player').setScale(0.5);

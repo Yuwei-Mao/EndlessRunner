@@ -3,23 +3,24 @@
 
 //game configuration
 let config = {
-    type: Phaser.CANVAS,
-    width: 640,
-    height: 480,
-    input: {
-        gamepad: true
+    parent: 'myGame',
+    type: Phaser.AUTO,
+    height: 640,
+    width: 960,
+    scale: {
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     physics: {
         default: 'arcade',
         arcade: {
-            //debug: true
-            gravity:{
+            //debug: true,
+            gravity: {
                 x: 0,
-                Y: 0
+                y: 0
             }
         }
     },
-    scene: [Play]
+    scene: [Load, Title, Menu, Play]
 }
 
 //define game
@@ -30,6 +31,11 @@ let centerX = game.config.width / 2;
 let centerY = game.config.height / 2;
 let quarterX = game.config.width / 4;
 let quarterY = game.config.height / 4;
+let w = game.config.width;
+let h = game.config.height;
+const textSpacer = 64;
+const SCALE = 4;
+let cursors;
 
 //define states
 let haveSword = false;
