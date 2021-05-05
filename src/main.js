@@ -1,5 +1,15 @@
 //CMPM 120
 //UC Santa Cruz
+//Creative Tilt
+//The game theme is technically interesting even though Jumping is the only game mechanic we implemented. We are proud of using a lot of
+//programming techniques to finish this project, but the one we are the most proud of is to use Javascript to add animations into our game.
+//Our game definitely has wonderful visual style. We don't feel quite familiar about make gaming auido and gaming art, so we are pretty satisfield
+//about the music and art we made. In our endless runner game, it includes not only enemies and obstacles that you need to dodge, but also some items
+//that give the character the ability to kill enemies or make the character invincible for a short amount of time. In other words, our game has more diversity.
+
+//GameName: Santa Cruz Skateboarding
+//Group number Name: Henry Huang, Ligen Han, Yuwei Mao
+//Date: 05/03/21
 
 //game configuration
 let config = {
@@ -49,4 +59,3 @@ let timerForBg = 0;
 
 let jumpn =0;
 let highscore =0;
-

@@ -34,7 +34,7 @@ class Play extends Phaser.Scene{
             key: 'jump',
             defaultTextureKey: 'cha_atlas',
             frames: [
-                
+
                 { frame: 'jump0004' },
 
             ],
@@ -179,7 +179,7 @@ class Play extends Phaser.Scene{
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
-              
+
                 this.foe1.x = centerX*3;
                 this.foe1.x = game.config.width;
                 if (Math.round(Math.random()) == 0){
@@ -331,13 +331,13 @@ class Play extends Phaser.Scene{
             jumpn=0;
             this.p1.anims.play('skate', true);
         }
-        
+
         else if (this.p1.body.touching.down&&haveSword){
             swordMoving = false;
-            this.sword1.x =game.config.width - quarterX;
-            this.sword1.y = quarterY/4;
             this.sword1.setVelocityX(0);
             this.sword1.setVelocityY(0);
+            this.sword1.x =game.config.width - quarterX;
+            this.sword1.y = quarterY/4;
             this.p1.anims.play('skatingwithSword', true);
             timer+=1;
             jumpn=0;
@@ -345,15 +345,16 @@ class Play extends Phaser.Scene{
 
         else if (this.p1.body.touching.down&&haveShield){
             shieldMoving = false;
-            this.shield1.x = game.config.width - quarterX;
-            this.shield1.y = quarterY/4;
             this.shield1.setVelocityX(0);
             this.shield1.setVelocityY(0);
+            this.shield1.x = game.config.width - quarterX;
+            this.shield1.y = quarterY/4;
+
             this.p1.anims.play('skatingwithShield', true);
             timer+=1;
             jumpn=0;
         }
-        
+
 
 
         this.banana1.x+=-this.playerVelocity/100;
