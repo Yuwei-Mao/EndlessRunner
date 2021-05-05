@@ -112,6 +112,7 @@ class Menu extends Phaser.Scene{
 
     update(){
         if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+            this.sound.play('switch');
                 let textureManager = this.textures;
                 // take snapshot of the entire game viewport
                 // https://newdocs.phaser.io/docs/3.54.0/Phaser.Renderer.WebGL.WebGLRenderer#snapshot
@@ -126,6 +127,7 @@ class Menu extends Phaser.Scene{
                 });
           
             // start next scene
+            
             this.scene.start('playScene');
         }
     }

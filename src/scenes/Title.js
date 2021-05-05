@@ -84,6 +84,7 @@ class Title extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
           
             // start next scene
+            this.sound.play('switch');
             this.scene.start('menuScene');
         }
     }

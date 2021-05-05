@@ -21,31 +21,7 @@ class Play extends Phaser.Scene{
             repeat: 0
         });
 
-        //define constants of physics
-        this.MAX_JUMPS = 1;
-        this.JUMP_VELOCITY = -700;
-        this.MAX_X_VEL = 500;   // pixels/second
-        this.MAX_Y_VEL = 5000;
-        this.physics.world.gravity.y = 2600;
-        this.playerVelocity = 300;
-        this.enemyVelocity = 350;
-        this.rewardVelocity1 = 400;
-        this.rewardVelocity2 = 500;
-
-
-        //Place background
-        this.bg = this.add.tileSprite(0, 0,960,640,'sea').setOrigin(0,0);
-        this.bg2 = this.add.tileSprite(2000,2000,960,640,'forest').setOrigin(0,0);
-
-        //add player
-        this.p1 = this.physics.add.sprite(0,centerY,'cha_atlas','skating0001').setScale(SCALE/2);
-        this.p1.setCollideWorldBounds(true);
-        this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
-
-
-
-
-        //creating animation for player
+         //creating animation for player
 
 
         // skating animation
@@ -180,17 +156,37 @@ class Play extends Phaser.Scene{
             ],
         });
 
+        //define constants of physics
+        this.MAX_JUMPS = 1;
+        this.JUMP_VELOCITY = -850;
+        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_Y_VEL = 5000;
+        this.physics.world.gravity.y = 2600;
+        this.playerVelocity = 300;
+        this.enemyVelocity = 250;
+        this.rewardVelocity1 = 400;
+        this.rewardVelocity2 = 500;
+
+
+        //Place background
+        this.bg = this.add.tileSprite(0, 0,960,640,'sea').setOrigin(0,0);
+        this.bg2 = this.add.tileSprite(2000,2000,960,640,'forest').setOrigin(0,0);
+
+        //add player
+        this.p1 = this.physics.add.sprite(0,centerY,'cha_atlas','skating0001').setScale(SCALE/3);
+        this.p1.setCollideWorldBounds(true);
+        this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
 
         //add monster
-        this.foe1 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
+        this.foe1 = this.physics.add.sprite(centerX*3,centerY,'monster_atlas','monster0001');
         this.foe1.body.setAllowGravity(false);
         this.foe1.anims.play('monstermove');
-        //this.foe1.body.setSize(32,32);
+        this.foe1.body.setSize(32,32);
 
-        this.foe2 = this.physics.add.sprite(centerX*3,game.config.height- quarterY/4,'monster_atlas','monster0001');
+        this.foe2 = this.physics.add.sprite(2000,2000,'monster_atlas','monster0001').setScale(2);
         this.foe2.body.setAllowGravity(false);
         this.foe2.anims.play('monstermove');
-        //this.foe2.body.setSize(64,64);
+        this.foe2.body.setSize(64,64);
 
         //add coin
         this.coin1 = this.physics.add.sprite(centerX,centerY,'coin_atlas', 'coin0001').setScale(SCALE/1.5);
@@ -208,7 +204,7 @@ class Play extends Phaser.Scene{
         this.shield1.anims.play('shieldmove');
 
         //add banana
-        this.banana1 = this.physics.add.sprite(centerX*2, 600,'banana0001');
+        this.banana1 = this.physics.add.sprite(centerX*2, 550,'banana0001');
         this.banana1.body.setAllowGravity(false);
         this.banana1.anims.play('bananamove');
 
@@ -243,6 +239,7 @@ class Play extends Phaser.Scene{
         //add physics collider
         this.physics.add.collider(this.p1,this.foe1, ()=>{
             if (haveSword){
+                this.sound.play('destory');
                 this.score += 20;
                 //reset
                 this.foe1.x = centerX*3;
@@ -253,10 +250,13 @@ class Play extends Phaser.Scene{
                 this.foe1.x = centerX*3;
                 this.foe1.y = this.p1.y;
             }else{
+                this.sound.play('destory');
                 this.playerVelocity = 0;
                 this.enemyVelocity = 0;
                 this.rewardVelocity1 = 0;
                 this.rewardVelocity2 = 0;
+                this.JUMP_VELOCITY = 0;
+                this.foe1.x = centerX*3;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
 
@@ -264,7 +264,8 @@ class Play extends Phaser.Scene{
 
         this.physics.add.collider(this.p1,this.foe2, ()=>{
             if (haveSword){
-                this.score += 20;
+                this.sound.play('destory');
+                this.score += 30;
                 //reset
                 this.foe2.x = centerX*6;
                 this.foe2.y = this.p1.y;
@@ -274,16 +275,20 @@ class Play extends Phaser.Scene{
                 this.foe2.x = centerX*6;
                 this.foe2.y = this.p1.y;
             }else{
+                this.sound.play('destory');
                 this.playerVelocity = 0;
                 this.enemyVelocity = 0;
                 this.rewardVelocity1 = 0;
                 this.rewardVelocity2 = 0;
+                this.JUMP_VELOCITY = 0;
+                this.foe2.x = centerX*3;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
 
         },null, this);
 
         this.physics.add.collider(this.p1,this.coin1, ()=>{
+            this.sound.play('eatcoin');
             this.score += 10;
             this.credit += 10;
             this.scoreText.text = this.score;
@@ -298,26 +303,34 @@ class Play extends Phaser.Scene{
 
 
         this.physics.add.collider(this.p1,this.sword1,()=>{
+            this.sound.play('getsword');
             haveSword = true;
         },null, this);
 
         this.physics.add.collider(this.p1,this.shield1,()=>{
+            this.sound.play('getsword');
             haveShield = true;
         },null, this);
 
         this.physics.add.collider(this.p1,this.banana1,()=>{
             if (haveShield){
                 //reset the position of banana
+                this.sound.play('steponbanana');
                 this.banana1.x = centerX*3;
             }else{
+                this.sound.play('steponbanana');
                 this.playerVelocity = 0;
                 this.enemyVelocity = 0;
                 this.rewardVelocity1 = 0;
                 this.rewardVelocity2 = 0;
+                this.JUMP_VELOCITY = 0;
+                this.banana1.x = centerX*3;
                 this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
             }
 
         },null,this);
+
+        this.physics.add.collider(this.p1,[this.upwall,this.bottomwall]);
 
 
 
@@ -345,6 +358,8 @@ class Play extends Phaser.Scene{
         //     this.p1.body.setVelocityY(this.JUMP_VELOCITY);
         // }
 
+        
+
 
         this.bg.tilePositionX += this.playerVelocity/100;
         this.bg2.tilePositionX += this.playerVelocity/100;
@@ -366,13 +381,19 @@ class Play extends Phaser.Scene{
         }
 
 
-        if(this.input.keyboard.createCursorKeys().space.isDown) {
-            this.p1.setVelocityY(-this.playerVelocity);
+        if(Phaser.Input.Keyboard.JustDown(this.input.keyboard.createCursorKeys().space)&&jumpn<=1) {
+            this.p1.setVelocityY(this.JUMP_VELOCITY);
             this.p1.setVelocityX(0);
-        } else{
-            this.p1.setVelocityY(this.playerVelocity);
-            this.p1.setVelocityX(0);
+            jumpn+=1;
+            this.p1.anims.play('jump',true);
         }
+
+        if (this.p1.body.touching.down){
+            jumpn=0;
+            this.p1.anims.play('skate', true);
+        }
+        
+        
 
 
         this.banana1.x+=-this.playerVelocity/100;
@@ -439,7 +460,7 @@ class Play extends Phaser.Scene{
 
 
         //make sword/shield appear if score larger than 50
-        if (this.credit > 100 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
+        if (this.credit > 30 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
             this.credit = 0;
             if (Math.round(Math.random()) == 0 ){
                 this.sword1.x = game.config.width;
@@ -475,10 +496,11 @@ class Play extends Phaser.Scene{
 
         if (haveSword){
             swordMoving = false;
-            this.sword1.x = game.config.width - quarterX;
+            this.sword1.x =game.config.width - quarterX;
             this.sword1.y = quarterY/4;
             this.sword1.setVelocityX(0);
             this.sword1.setVelocityY(0);
+            this.p1.anims.play('skatingwithSword', true);
             timer+=1;
         }
 
@@ -488,6 +510,7 @@ class Play extends Phaser.Scene{
             this.shield1.y = quarterY/4;
             this.shield1.setVelocityX(0);
             this.shield1.setVelocityY(0);
+            this.p1.anims.play('skatingwithShield', true);
             timer+=1;
         }
 

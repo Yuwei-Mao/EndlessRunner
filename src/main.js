@@ -47,3 +47,5 @@ let shieldMoving = false;
 let timer = 0;
 let timerForBg = 0;
 
+let jumpn =0;
+

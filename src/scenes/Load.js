@@ -25,6 +25,13 @@ class Load extends Phaser.Scene {
         this.load.atlas('action_atlas','action.png','action.json');
         this.load.atlas('holditemskating_atlas','holdingitemSkating.png','holdingitemSkating.json');
         this.load.bitmapFont('gem', 'gem.png', 'gem.xml');
+
+        //sound
+        this.load.audio('destory','destory.wav');
+        this.load.audio('eatcoin','eatcoin.wav');
+        this.load.audio('getsword','getsword.wav');
+        this.load.audio('steponbanana','steponbanana.wav');
+        this.load.audio('switch','switch.wav');
     }
 
     create() {
