@@ -12,18 +12,8 @@ class Play extends Phaser.Scene{
     }
 
     create() {
-        let titleSnap = this.add.image(centerX, centerY, 'titlesnapshot').setOrigin(0.5);
-        this.tweens.add({
-            targets: titleSnap,
-            duration: 4500,
-            alpha: { from: 1, to: 0 },
-            scale: { from: 1, to: 0 },
-            repeat: 0
-        });
 
          //creating animation for player
-
-
         // skating animation
         this.anims.create({
             key: 'skate',
@@ -44,7 +34,7 @@ class Play extends Phaser.Scene{
             key: 'jump',
             defaultTextureKey: 'cha_atlas',
             frames: [
-
+                
                 { frame: 'jump0004' },
 
             ],
@@ -103,58 +93,6 @@ class Play extends Phaser.Scene{
             ],
         });
 
-        //skating animation while having sword
-        this.anims.create({
-            key: 'skatingwithSword',
-            frames: this.anims.generateFrameNames('holditemskating_atlas', {
-                prefix: 'holdingSword',
-                start: 1,
-                end: 6,
-                suffix: '',
-                zeroPad: 4
-            }),
-            frameRate: 8,
-            repeat: -1
-        });
-
-
-        //skating animation while having shield
-        this.anims.create({
-            key: 'skatingwithShield',
-            frames: this.anims.generateFrameNames('holditemskating_atlas', {
-                prefix: 'holdingShield',
-                start: 1,
-                end: 6,
-                suffix: '',
-                zeroPad: 4
-            }),
-            frameRate: 8,
-            repeat: -1
-        });
-
-
-
-        // poke sword animation
-        this.anims.create({
-            key: 'attack',
-            defaultTextureKey: 'action_atlas',
-            frames: [
-
-                { frame: 'pokingSword0003' },
-
-            ],
-        });
-
-        // use shield defend animation
-        this.anims.create({
-            key: 'defend',
-            defaultTextureKey: 'action_atlas',
-            frames: [
-
-                { frame: 'wavingShield0003' },
-
-            ],
-        });
 
         //define constants of physics
         this.MAX_JUMPS = 1;
@@ -163,9 +101,9 @@ class Play extends Phaser.Scene{
         this.MAX_Y_VEL = 5000;
         this.physics.world.gravity.y = 2600;
         this.playerVelocity = 300;
-        this.enemyVelocity = 250;
-        this.rewardVelocity1 = 400;
-        this.rewardVelocity2 = 500;
+        this.enemyVelocity = 300;
+        this.rewardVelocity1 = 300;
+        this.rewardVelocity2 = 300;
 
 
         //Place background
@@ -178,15 +116,15 @@ class Play extends Phaser.Scene{
         this.p1.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
 
         //add monster
-        this.foe1 = this.physics.add.sprite(centerX*3,centerY,'monster_atlas','monster0001');
+        this.foe1 = this.physics.add.sprite(centerX*3,100,'monster_atlas','monster0001');
         this.foe1.body.setAllowGravity(false);
         this.foe1.anims.play('monstermove');
-        this.foe1.body.setSize(32,32);
+        this.foe1.body.setSize(8,8);
 
         this.foe2 = this.physics.add.sprite(2000,2000,'monster_atlas','monster0001').setScale(2);
         this.foe2.body.setAllowGravity(false);
         this.foe2.anims.play('monstermove');
-        this.foe2.body.setSize(64,64);
+        this.foe2.body.setSize(16,16);
 
         //add coin
         this.coin1 = this.physics.add.sprite(centerX,centerY,'coin_atlas', 'coin0001').setScale(SCALE/1.5);
@@ -206,6 +144,7 @@ class Play extends Phaser.Scene{
         //add banana
         this.banana1 = this.physics.add.sprite(centerX*2, 550,'banana0001');
         this.banana1.body.setAllowGravity(false);
+        this.banana1.body.setSize(8,8);
         this.banana1.anims.play('bananamove');
 
         //add up and dowm air wall
@@ -219,36 +158,35 @@ class Play extends Phaser.Scene{
         this.bottomwall.setImmovable(true);
         this.bottomwall.body.setAllowGravity(false);
 
-        //add scorer
-        let scoreConfig = {
-            fontFamily: 'Courier',
-            fontSize: '20px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
-            padding: {
-              top: 5,
-              bottom: 5,
-            },
-            fixedWidth: 160
-          }
         this.score = 0;
         this.credit = 0;   //credit is for sword/shield appear
-        this.scoreText = this.add.text(quarterX/4, quarterY/4, "SPACE TO JUMP", scoreConfig);
-
+        //this.scoreText = this.add.text(quarterX/4, quarterY/4, "SPACE TO JUMP", scoreConfig);
+        this.scoreText = this.add.bitmapText(quarterX/4, quarterY/4, 'gem', 'SPACE TO JUMP!', 30).setOrigin(0,0).setTint(0xa84632);
         //add physics collider
         this.physics.add.collider(this.p1,this.foe1, ()=>{
             if (haveSword){
+                //this.p1.anims.play('attack');
                 this.sound.play('destory');
                 this.score += 20;
                 //reset
                 this.foe1.x = centerX*3;
-                this.foe1.y = this.p1.y;
+                this.foe1.x = game.config.width;
+                if (Math.round(Math.random()) == 0){
+                    this.foe1.y = centerY - quarterY/4;
+                }else{
+                    this.foe1.y = 100;
+                }
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
+              
                 this.foe1.x = centerX*3;
-                this.foe1.y = this.p1.y;
+                this.foe1.x = game.config.width;
+                if (Math.round(Math.random()) == 0){
+                    this.foe1.y = centerY - quarterY/4;
+                }else{
+                    this.foe1.y = 100;
+                }
             }else{
                 this.sound.play('destory');
                 this.playerVelocity = 0;
@@ -257,7 +195,10 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.JUMP_VELOCITY = 0;
                 this.foe1.x = centerX*3;
-                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+                if (this.score>highscore){
+                    highscore = this.score;
+                }
+                this.scene.start('overScene');
             }
 
         },null, this);
@@ -268,12 +209,21 @@ class Play extends Phaser.Scene{
                 this.score += 30;
                 //reset
                 this.foe2.x = centerX*6;
-                this.foe2.y = this.p1.y;
+                this.foe1.x = game.config.width;
+                if (Math.round(Math.random()) == 0){
+                    this.foe2.y = centerY - quarterY/4;
+                }else{
+                    this.foe2.y = 100;
+                }
                 this.scoreText.text = this.score;
             }else if(haveShield){
                 //reset
                 this.foe2.x = centerX*6;
-                this.foe2.y = this.p1.y;
+                if (Math.round(Math.random()) == 0){
+                    this.foe2.y = centerY - quarterY/4;
+                }else{
+                    this.foe2.y = 100;
+                }
             }else{
                 this.sound.play('destory');
                 this.playerVelocity = 0;
@@ -282,7 +232,11 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.JUMP_VELOCITY = 0;
                 this.foe2.x = centerX*3;
-                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+                if (this.score>highscore){
+                    highscore = this.score;
+                }
+
+                this.scene.start('overScene');
             }
 
         },null, this);
@@ -325,7 +279,10 @@ class Play extends Phaser.Scene{
                 this.rewardVelocity2 = 0;
                 this.JUMP_VELOCITY = 0;
                 this.banana1.x = centerX*3;
-                this.gameoverText = this.add.text(quarterX/4, quarterY, "GAME OVER", scoreConfig);
+                if (this.score>highscore){
+                    highscore = this.score;
+                }
+                this.scene.start('overScene');
             }
 
         },null,this);
@@ -343,28 +300,10 @@ class Play extends Phaser.Scene{
 
     update() {
 
-        // // play character skate animation
-        // if(!gameOver){
-        // this.p1.anims.play('skate', true);
-        // }
-
-
-        // // jump animation
-	    // if(!this.p1.body.touching.down) {
-        //     this.p1.anims.play('jump', true);
-        // }
-
-        // if(this.p1.body.touching.down && Phaser.Input.Keyboard.JustDown(cursors.space)) {
-        //     this.p1.body.setVelocityY(this.JUMP_VELOCITY);
-        // }
-
-        
-
-
         this.bg.tilePositionX += this.playerVelocity/100;
         this.bg2.tilePositionX += this.playerVelocity/100;
 
-        if (timerForBg >= 60*10) {
+        if (timerForBg >= 60*15) {
             timerForBg =0;
             if (this.bg.x ==2000){
                 this.bg2.x = 2000;
@@ -388,11 +327,32 @@ class Play extends Phaser.Scene{
             this.p1.anims.play('jump',true);
         }
 
-        if (this.p1.body.touching.down){
+        if (this.p1.body.touching.down&& !haveShield&&!haveSword){
             jumpn=0;
             this.p1.anims.play('skate', true);
         }
         
+        else if (this.p1.body.touching.down&&haveSword){
+            swordMoving = false;
+            this.sword1.x =game.config.width - quarterX;
+            this.sword1.y = quarterY/4;
+            this.sword1.setVelocityX(0);
+            this.sword1.setVelocityY(0);
+            this.p1.anims.play('skatingwithSword', true);
+            timer+=1;
+            jumpn=0;
+        }
+
+        else if (this.p1.body.touching.down&&haveShield){
+            shieldMoving = false;
+            this.shield1.x = game.config.width - quarterX;
+            this.shield1.y = quarterY/4;
+            this.shield1.setVelocityX(0);
+            this.shield1.setVelocityY(0);
+            this.p1.anims.play('skatingwithShield', true);
+            timer+=1;
+            jumpn=0;
+        }
         
 
 
@@ -407,28 +367,28 @@ class Play extends Phaser.Scene{
         if (this.foe1.x <= 0 - 500) {
             //reset
             this.foe1.x = game.config.width;
-            // if (Math.round(Math.random()) == 0){
-            //     this.foe1.y = centerY - quarterY/4;
-            // }else{
-            //     this.foe1.y = centerY + quarterY - quarterY/4;
-            // }
-            this.foe1.y = this.p1.y;
+             if (Math.round(Math.random()) == 0){
+                this.foe1.y = centerY - quarterY/4;
+            }else{
+                this.foe1.y = 100;
+            }
+            //this.foe1.y = this.p1.y;
         }
 
-        if (this.score >= 300 && this.score <600){
+        if (this.score >= 100 && this.score <300){
             this.foe2.setVelocityX(-this.enemyVelocity * 1);
             this.foe2.setVelocityY(0);
             if (this.foe2.x <= 0 - 1000) {
                 //reset
                 this.foe2.x = game.config.width;
-                // if (Math.round(Math.random()) == 0){
-                //     this.foe1.y = centerY - quarterY/4;
-                // }else{
-                //     this.foe1.y = centerY + quarterY - quarterY/4;
-                // }
-                this.foe2.y = this.p1.y;
+             if (Math.round(Math.random()) == 0){
+                this.foe2.y = centerY - quarterY/4;
+            }else{
+                this.foe2.y = 100;
             }
-        }else if(this.score >= 600){
+                //this.foe2.y = this.p1.y;
+            }
+        }else if(this.score >= 300){
             this.foe2.setVelocityX(-this.enemyVelocity * 2);
             this.foe2.setVelocityY(0);
             if (this.foe2.x <= 0 - 1000) {
@@ -439,7 +399,12 @@ class Play extends Phaser.Scene{
                 // }else{
                 //     this.foe1.y = centerY + quarterY - quarterY/4;
                 // }
-                this.foe2.y = this.p1.y;
+                //this.foe2.y = this.p1.y;
+                if (Math.round(Math.random()) == 0){
+                    this.foe2.y = centerY - quarterY/4;
+                }else{
+                    this.foe2.y = 100;
+                }
             }
 
 
@@ -460,7 +425,7 @@ class Play extends Phaser.Scene{
 
 
         //make sword/shield appear if score larger than 50
-        if (this.credit > 30 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
+        if (this.credit > 60 && !swordMoving && !haveSword && !shieldMoving && !haveShield) {
             this.credit = 0;
             if (Math.round(Math.random()) == 0 ){
                 this.sword1.x = game.config.width;
@@ -475,7 +440,7 @@ class Play extends Phaser.Scene{
             this.playerVelocity = this.playerVelocity*1.1;
             this.enemyVelocity =  this.enemyVelocity*1.1;
             this.rewardVelocity1 = this.rewardVelocity1*1.1;
-            this.rewardVelocity2 = this.rewardVelocity2*1.1;
+            //this.rewardVelocity2 = this.rewardVelocity2*1.1;
         }
 
         if (swordMoving == true){
@@ -494,25 +459,7 @@ class Play extends Phaser.Scene{
             }
         }
 
-        if (haveSword){
-            swordMoving = false;
-            this.sword1.x =game.config.width - quarterX;
-            this.sword1.y = quarterY/4;
-            this.sword1.setVelocityX(0);
-            this.sword1.setVelocityY(0);
-            this.p1.anims.play('skatingwithSword', true);
-            timer+=1;
-        }
 
-        if (haveShield){
-            shieldMoving = false;
-            this.shield1.x = game.config.width - quarterX;
-            this.shield1.y = quarterY/4;
-            this.shield1.setVelocityX(0);
-            this.shield1.setVelocityY(0);
-            this.p1.anims.play('skatingwithShield', true);
-            timer+=1;
-        }
 
         if (timer >=60*13){
             haveSword = false;

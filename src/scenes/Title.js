@@ -3,15 +3,41 @@ class Title extends Phaser.Scene {
         super('titleScene');
     }
 
+    preload() {
+
+        //load background
+        this.load.image('bg','assets/bp4.png');
+
+    }
+
     create() {
+        this.bg = this.add.tileSprite(0, 0,960,640,'bg').setOrigin(0,0);
+
+
+        this.player = this.add.sprite(7*textSpacer, 3*textSpacer, 'cha_atlas', 'skating0001').setScale(SCALE/2);
+        this.anims.create({
+            key: 'skate',
+            frames: this.anims.generateFrameNames('cha_atlas', {
+                prefix: 'skating',
+                start: 1,
+                end: 5,
+                suffix: '',
+                zeroPad: 4
+            }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.player.anims.play('skate', true);
+
         // add title screen text
-        let title01 = this.add.bitmapText(centerX - 3*textSpacer, centerY + 4.5*textSpacer, 'gem', 'Ligen Han', 20).setOrigin(0.5).setTint(0xb0f542);
+        let title01 = this.add.bitmapText(centerX - 3*textSpacer, centerY + 4.5*textSpacer, 'gem', 'Ligen Han', 20).setOrigin(0.5).setTint(0x4ea832);
         let title02 = this.add.bitmapText(centerX, centerY + 4.5*textSpacer, 'gem', 'Yuwei Mao', 20).setOrigin(0.5).setTint(0xff00ff);
         let title03 = this.add.bitmapText(centerX + 3*textSpacer, centerY + 4.5*textSpacer, 'gem', 'Henry Huang', 20).setOrigin(0.5).setTint(0xffff00);
         let title04 = this.add.bitmapText(centerX, centerY, 'gem', 'Santa Cruz Skateboarding', 64).setOrigin(0.5).setTint(0x0099ff);
         let title05 = this.add.bitmapText(centerX, centerY, 'gem', 'Santa Cruz Skateboarding', 64).setOrigin(0.5).setTint(0x0077ff).setBlendMode('SCREEN');
        
-        this.add.bitmapText(centerX, centerY + 2*textSpacer, 'gem', 'Press UP ARROW to Continue', 36).setOrigin(0.5);
+        this.add.bitmapText(centerX, centerY + 2*textSpacer, 'gem', 'Press UP ARROW to Continue', 36).setOrigin(0.5).setTint(0xa83232);
+        this.add.bitmapText(centerX, centerY + 3*textSpacer, 'gem', 'Press Down ARROW for Credit', 36).setOrigin(0.5).setTint(0xa83232);
 
         // title text tween
         this.tweens.add({
@@ -83,9 +109,15 @@ class Title extends Phaser.Scene {
         // check for UP input
         if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
           
-            // start next scene
+            // start gameplay scene
             this.sound.play('switch');
             this.scene.start('menuScene');
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(cursors.down)){
+            // start credit scene
+            this.sound.play('switch');
+            this.scene.start('creditScene');
         }
     }
 }

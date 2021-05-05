@@ -32,9 +32,14 @@ class Load extends Phaser.Scene {
         this.load.audio('getsword','getsword.wav');
         this.load.audio('steponbanana','steponbanana.wav');
         this.load.audio('switch','switch.wav');
+        this.load.audio('bgm','backgroundmusic.wav');
     }
 
     create() {
+        //add bgm
+        this.bgm = game.sound.add('bgm');
+        this.bgm.loop = true;
+        this.bgm.play();
         // go to Title scene
         this.scene.start('titleScene');
     }

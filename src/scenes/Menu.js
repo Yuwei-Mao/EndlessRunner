@@ -2,9 +2,19 @@ class Menu extends Phaser.Scene{
     constructor(){
         super("menuScene");
     }
+    
+    preload() {
 
+        //load background
+        this.load.image('bg','assets/bp4.png');
+
+    }
+
+    
+    
     create() {
 
+        this.bg = this.add.tileSprite(0, 0,960,640,'bg').setOrigin(0,0);
 
         let menuConfig = {
             fontFamily: 'emoji',
@@ -14,17 +24,29 @@ class Menu extends Phaser.Scene{
             fixedWidth: 0
         }
 
+        this.add.bitmapText(textSpacer, 1/2*textSpacer, 'gem', 'You will be skateboarding around Santa Cruz.', 22).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(textSpacer, 1.25*textSpacer, 'gem', 'This will definitely be an adventure filled with joy and danger.', 20).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(textSpacer, 2*textSpacer, 'gem', 'You can press Space Bar to jump.', 20).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(textSpacer, 3*textSpacer, 'gem', 'Try to avoid all the monsters and obstacles.', 20).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(textSpacer, 6*textSpacer, 'gem', 'Try to collect coins and items.', 20).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(textSpacer, 8.8*textSpacer, 'gem', 'Survive as long as you can to prove you are the GOAT!', 20).setOrigin(0,0).setTint(0x32a860);
+        this.add.bitmapText(5*textSpacer, 4.5*textSpacer, 'gem', 'Monsters and banana peels will make your journey end instantly.', 20).setOrigin(0,0).setTint(0xa84632);
+        this.add.bitmapText(5.5*textSpacer, 7*textSpacer, 'gem', 'Shield makes the character invincible for 10s.', 20).setOrigin(0,0).setTint(0xa84632);
+        this.add.bitmapText(5.5*textSpacer, 8.1*textSpacer, 'gem', 'Sword grants the ability of killing monsters for 10s.', 20).setOrigin(0,0).setTint(0xa84632);
+        this.add.bitmapText(2.5*textSpacer, 7.5*textSpacer, 'gem', 'Bonus points!', 20).setOrigin(0,0).setTint(0xa84632);
 
-        this.add.text(textSpacer, 1/2*textSpacer,'You will be skateboarding around Santa Cruz.', menuConfig).setOrigin(0,0);
-        this.add.text(textSpacer, 1.25*textSpacer,'This will definitely be an adventure filled with joy and danger.', menuConfig).setOrigin(0,0);
-        this.add.text(textSpacer, 2*textSpacer,'You can press Space Bar to jump.', menuConfig).setOrigin(0,0);
-        this.add.text(textSpacer, 3*textSpacer,'Try to avoid all the monsters and obstacles.', menuConfig).setOrigin(0,0);
-        this.add.text(textSpacer, 6*textSpacer,'Try to collect coins and items.', menuConfig).setOrigin(0,0);
-        this.add.text(textSpacer, 9*textSpacer,'Survive as long as you can to prove you are the GOAT!', menuConfig).setOrigin(0,0);
-        this.add.text(5*textSpacer, 4.5*textSpacer,'Monsters and banana peels will make your journey end instantly.')
-        this.add.text(5.5*textSpacer, 7*textSpacer,'Shield makes the character invincible for banana peels for 5s.')
-        this.add.text(5.5*textSpacer, 8*textSpacer,'Sword grants the ability of killing monsters for 10s.')
-        this.add.text(2.5*textSpacer, 7.5*textSpacer,'Bonus points!')
+
+
+
+        let menuConfig1 = {
+            fontFamily: 'emoji',
+            fontSize: '24px',
+            backgroundColor: '#F34141',
+            color: '#03fc30',
+            fixedWidth: 0
+        }
+        this.add.bitmapText(11*textSpacer, 9.5*textSpacer,'gem','Press Right Arrow to start the game.',20).setOrigin(0.5).setTint(0x3432a8);
+        this.add.bitmapText(3*textSpacer, 9.5*textSpacer,'gem','Press Left Arrow to go back.',20).setOrigin(0.5).setTint(0x3432a8);
 
 
 
@@ -111,24 +133,14 @@ class Menu extends Phaser.Scene{
     }
 
     update(){
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
             this.sound.play('switch');
-                let textureManager = this.textures;
-                // take snapshot of the entire game viewport
-                // https://newdocs.phaser.io/docs/3.54.0/Phaser.Renderer.WebGL.WebGLRenderer#snapshot
-                // .snapshot(callback, type, encoderOptions)
-                this.game.renderer.snapshot((image) => {
-                    // make sure an existing texture w/ that key doesn't already exist
-                    if(textureManager.exists('titlesnapshot')) {
-                        textureManager.remove('titlesnapshot');
-                    }
-                    // take the snapshot img returned from callback and add to texture manager
-                    textureManager.addImage('titlesnapshot', image);
-                });
-          
-            // start next scene
-            
             this.scene.start('playScene');
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+            this.sound.play('switch');
+            this.scene.start('titleScene');
         }
     }
 }

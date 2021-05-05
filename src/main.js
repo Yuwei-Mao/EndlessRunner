@@ -20,7 +20,7 @@ let config = {
             }
         }
     },
-    scene: [Load, Title, Menu, Play]
+    scene: [Load, Title, Credit, Menu, Play, Gameover]
 }
 
 //define game
@@ -48,4 +48,5 @@ let timer = 0;
 let timerForBg = 0;
 
 let jumpn =0;
+let highscore =0;
 
